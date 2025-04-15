@@ -24,9 +24,8 @@ dark_mode = False # dark mode, toggled using 'm'
 pygame.init()
 screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE)
 pygame.display.set_caption("erik's physics engine")
-icon = pygame.image.load('transparent.png')
+icon = pygame.image.load('icon.png')
 pygame.display.set_icon(icon)
-
 
 # window position, uses win32api to get the window position based on the window handle
 hwnd = pygame.display.get_wm_info()["window"] # get the window handle
