@@ -18,6 +18,6 @@ arrow keys - change the gravity
 ```
 
 ## extra
-try resizing the window! it should be responsive to the window size.
+try moving / resizing the window! it should be responsive to the window size and movement.
 
 &copy; erik thorsell 2025-present. all rights reserved.

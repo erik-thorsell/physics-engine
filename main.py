@@ -185,7 +185,7 @@ while True:
                     dark_mode = not dark_mode
         
         # resize event
-        if event.type == pygame.VIDEORESIZE:
+        if event.type == pygame.VIDEORESIZE or event.type == pygame.WINDOWMOVED:
             #ensure that the balls stay in the same position on the screen when window is resized
             old_window_position = window_position
             update_window_position()
@@ -195,8 +195,10 @@ while True:
                 for ball in balls:
                     ball.x += dx
                     ball.y += dy
-            screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
-            screen_width, screen_height = event.w, event.h # update screen size
+            if event.type == pygame.VIDEORESIZE:
+                # resize the screen
+                screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+                screen_width, screen_height = event.w, event.h
 
     keys = pygame.key.get_pressed()
     # jedi force
