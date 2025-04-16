@@ -10,7 +10,7 @@ pip install -r requirements.txt
 ```
 [b] - spawn a ball
 [n] - spawn three balls
-[← ↑ ↓ →] - play with gravity
+[← ↑ ↓ →] - manipulate gravity
 [g] - toggle gravity
 [space] - add a random force to all balls
 [delete] - remove the first spawned ball

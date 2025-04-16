@@ -252,16 +252,16 @@ while True:
     # jedi force
     if keys[pygame.K_LEFT]:
         for ball in balls:
-            ball.apply_force((-jedi_force/2, 0))
+            ball.apply_force((-jedi_force/2 * 1/(ball.mass/750), 0))
     if keys[pygame.K_RIGHT]:
         for ball in balls:
-            ball.apply_force((jedi_force/2, 0))
+            ball.apply_force((jedi_force/2 * 1/(ball.mass/750), 0))
     if keys[pygame.K_UP]:
         for ball in balls:
-            ball.apply_force((0, -jedi_force))
+            ball.apply_force((0, -jedi_force * 1/(ball.mass/750)))
     if keys[pygame.K_DOWN]:
         for ball in balls:
-            ball.apply_force((0, jedi_force))
+            ball.apply_force((0, jedi_force * 1/(ball.mass/750)))
 
     if keys[pygame.K_BACKSPACE]: # delete last ball
         if len(balls) > 0:
