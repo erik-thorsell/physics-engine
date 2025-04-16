@@ -118,6 +118,9 @@ class Ball:
                 self.velocity = (self.velocity[0] + impulse_x / self.mass, self.velocity[1] + impulse_y / self.mass)
                 other_ball.velocity = (other_ball.velocity[0] - impulse_x / other_ball.mass, other_ball.velocity[1] - impulse_y / other_ball.mass)
 
+                self.last_collision = pygame.time.get_ticks()
+                other_ball.last_collision = pygame.time.get_ticks()
+
                 return True, (normal_x, normal_y)
             #otherwise we'll handle it next frame
         
@@ -163,16 +166,18 @@ class Ball:
             self.y = self.radius+.5
             if self.velocity[1] <= 0:
                 self.velocity = (self.velocity[0], -self.velocity[1] * (1 - bounce_resistance))
-
-
-        if debug:
-            font = pygame.font.Font(None, 20)
-            text = font.render(f"({self.velocity[0]:.2f}, {self.velocity[1]:.2f})", True, (0,0,0))
-            screen.blit(text, (self.x - self.radius + 5, self.y - self.radius - 20))
+            
 
 
     def draw(self):
-        pygame.draw.circle(screen, self.color, (int(self.x), int(self.y)), self.radius)
+        color = self.color
+        if debug:
+            if pygame.time.get_ticks() - self.last_collision < 150:
+                color = (225, 0, 0)
+            font = pygame.font.Font(None, 20)
+            text = font.render(f"({self.velocity[0]:.2f}, {self.velocity[1]:.2f})", True, (0,0,0))
+            screen.blit(text, (self.x - self.radius + 5, self.y - self.radius - 20))
+        pygame.draw.circle(screen, color, (int(self.x), int(self.y)), self.radius)
 
     def destroy(self):
         balls.remove(self)
