@@ -10,7 +10,7 @@ screen_height = 600
 
 #settings
 jedi_force = 75 #level of force applied when using the arrow keys
-gravity = (0, 9.82/200) #gravity vector
+gravity = (0, 9.82/250) #gravity vector
 air_resistance = 0.15 # constant multiplier for air resistance
 bounce_resistance = 0.25 # how much force is lost when bouncing off a wall
 stop_velocity = 75 # velocity at which the ball stops
