@@ -17,7 +17,7 @@ stop_velocity = 75 # velocity at which the ball stops
 wall_margin = 10 # margin for the walls to prevent the balls from getting stuck
 start_velocity = 500 # initial velocity of the balls
 
-debug_text = False # show debug text, toggled using 'c'
+debug = False # show debug things, toggled using 'c'
 dark_mode = False # dark mode, toggled using 'm'
 
 # window creation
@@ -49,6 +49,7 @@ class Ball:
         self.x = 0
         self.y = 0
         self.velocity = (0, 0)
+        self.last_collision = 0
 
         balls.append(self)
     
@@ -78,7 +79,46 @@ class Ball:
         # check for collision with other balls
         if abs(self.x - other_ball.x) < self.radius + other_ball.radius and abs(self.y - other_ball.y) < self.radius + other_ball.radius:
             if self.y - other_ball.y != 0 and self.x - other_ball.x != 0:
-                return True, (1/(self.x - other_ball.x), 1/(self.y - other_ball.y)) # return the normal vector of the collision
+                # normal vector
+                dx = other_ball.x - self.x
+                dy = other_ball.y - self.y
+                distance = math.sqrt(dx**2 + dy**2)
+                
+
+                # separation
+                overlap = (self.radius + other_ball.radius) - distance
+                
+                if distance != 0:
+                    normal_x = dx / distance
+                    normal_y = dy / distance
+                else:
+                    #random separation
+                    normal_x = randint(-1, 1)
+                    normal_y = randint(-1, 1)
+                
+                separation_x = normal_x * overlap * 0.5
+                separation_y = normal_y * overlap * 0.5
+                
+                self.x -= separation_x
+                self.y -= separation_y
+                other_ball.x += separation_x
+                other_ball.y += separation_y
+
+                # impulse
+                relative_velocity_x = self.velocity[0] - other_ball.velocity[0]
+                relative_velocity_y = self.velocity[1] - other_ball.velocity[1]
+
+                dot_product = relative_velocity_x * normal_x + relative_velocity_y * normal_y
+                j = -(1 + bounce_resistance) * dot_product / (1/self.mass + 1/other_ball.mass)
+                if j > 0: # if they are moving apart, don't apply impulse
+                    return False, [0, 0]
+                impulse_x = j * normal_x
+                impulse_y = j * normal_y
+
+                self.velocity = (self.velocity[0] + impulse_x / self.mass, self.velocity[1] + impulse_y / self.mass)
+                other_ball.velocity = (other_ball.velocity[0] - impulse_x / other_ball.mass, other_ball.velocity[1] - impulse_y / other_ball.mass)
+
+                return True, (normal_x, normal_y)
             #otherwise we'll handle it next frame
         
         return False, [0, 0] # no collision
@@ -101,11 +141,7 @@ class Ball:
         for other_ball in balls:
             if other_ball == self: continue
             collision, normal = self.check_collision(other_ball)
-            if not collision: continue
-            self.velocity = (
-            abs(self.velocity[0]) * (-1 if normal[0] < 0 else 1),
-            abs(self.velocity[1]) * (-1 if normal[1] < 0 else 1)
-            )
+            # if collision: continue
 
 
         self.velocity = (self.velocity[0] * (1 - air_resistance * dt), self.velocity[1] * (1 - air_resistance * dt))
@@ -129,7 +165,7 @@ class Ball:
                 self.velocity = (self.velocity[0], -self.velocity[1] * (1 - bounce_resistance))
 
 
-        if debug_text:
+        if debug:
             font = pygame.font.Font(None, 20)
             text = font.render(f"({self.velocity[0]:.2f}, {self.velocity[1]:.2f})", True, (0,0,0))
             screen.blit(text, (self.x - self.radius + 5, self.y - self.radius - 20))
@@ -162,7 +198,7 @@ while True:
                     pygame.quit()
                     exit()
                 case pygame.K_c: # toggle debug text
-                    debug_text = not debug_text
+                    debug = not debug
                 case pygame.K_b: # spawn ball
                     add_ball(randint(10, 20))
                 case pygame.K_n: # spawn 3 balls
