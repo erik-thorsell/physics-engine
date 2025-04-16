@@ -10,7 +10,7 @@ screen_height = 600
 
 #settings
 jedi_force = 75 #level of force applied when using the arrow keys
-gravity = (0, 9.82/250) #gravity vector
+default_gravity = (0, 9.82/250) #gravity vector
 air_resistance = 0.15 # constant multiplier for air resistance
 bounce_resistance = 0.25 # how much force is lost when bouncing off a wall
 stop_velocity = 75 # velocity at which the ball stops
@@ -19,6 +19,9 @@ start_velocity = 500 # initial velocity of the balls
 
 debug = False # show debug things, toggled using 'c'
 dark_mode = False # dark mode, toggled using 'm'
+
+
+gravity = default_gravity
 
 # window creation
 pygame.init()
@@ -221,6 +224,11 @@ while True:
                 case pygame.K_r: # reset all balls' velocity
                     for ball in balls:
                         ball.velocity = (0, 0)
+                case pygame.K_g: # toggle gravity
+                    if gravity == default_gravity:
+                        gravity = (0, 0)
+                    else:
+                        gravity = default_gravity
                 case pygame.K_m: # toggle dark mode
                     dark_mode = not dark_mode
         
